@@ -1,58 +1,48 @@
 :- set_prolog_flag(double_quotes, chars).
 
-identifier([L|Ls]) -->
-    first_letter(L),
-    ident(Ls).
+lexem(int) --> [int].
+lexem(string) --> [string].
+lexem(+) --> [+].
+lexem(-) --> [-].
+lexem(*) --> [*].
+lexem(/) --> [/].
+%lexem(%) --> [%].
+lexem(var) --> [var].
+lexem(:=) --> [:=].
+lexem(=) --> [=].
+lexem(<>) --> [<>].
+lexem(<) --> [<].
+lexem(<=) --> [<=].
+lexem(>) --> [>].
+lexem(>=) --> [>=].
+lexem(if) --> [if].
+lexem(then) --> [then].
+lexem(else) --> [else].
+%lexem(() --> [(].
+%lexem()) --> [)].
+lexem(;) --> [;].
+lexem(while) --> [while].
+lexem(do) --> [do].
+lexem(function) --> [function].
+lexem(:) --> [:].
+lexem(let) --> [let].
+lexem(in) --> [in].
+lexem(end) --> [end].
+lexem(scani) --> [scani].
+lexem(printi) --> [printi].
+lexem(&) --> [&].
+lexem(|) --> [|].
+lexem(for) --> [for].
+lexem(to) --> [to].
+lexem(break) --> [break].
+lexem(print) --> [print].
+%lexem([) --> [[].
+%lexem(]) --> []].
+lexem(of) --> [of].
+lexem(,) --> [,].
 
-ident([L|Ls]) -->
-    first_letter(L),
-    ident(Ls).
-ident([]) -->
-    [].
 
-first_letter(L) -->
-    uppercase(L).
-first_letter(L) -->
-    lowercase(L).
-%first_letter("_") -->
-%    [_]. 
-
-uppercase(L) -->
-    [L],                   % uppercase letters
-    {char_type(L,upper)}.  
- 
-lowercase(L) -->
-     [L],                   % lowercase letters
-     {char_type(L,lower)}.  
-
-number([D|Ds]) -->        % numbers are
-   digit(D),              % a digit followed
-   digits(Ds).            % by other digits
-
-digits([D|Ds]) -->
-   digit(D),
-   digits(Ds).
-digits([]) -->
-   [].
-
-digit(D) -->              % a single digit
-   [D],
-   {char_type(D,digit)}.
-
-lexem(+) -->
-    [+].
-lexem(-) -->
-    [-].
-lexem(*) -->
-    [*].
-lexem(/) -->
-    [/].
-lexem(<=) -->
-    [<=].
-lexem(=) -->
-    [=]. 
-
-lexem(int(NA)) -->
+lexem(int(NA)) -->  
     number(A),
     !,                     % longest input match
     {number_chars(NA,A)}.
@@ -66,6 +56,45 @@ whitespace -->
     [W],
     {char_type(W,space)}. % space is whitespace
 
+identifier([L|Ls]) -->
+    first_letter(L),
+    ident(Ls).
+    
+ident([L|Ls]) -->
+    first_letter(L),
+    ident(Ls).
+ident([]) -->
+        [].
+    
+first_letter(L) -->
+    uppercase(L).
+first_letter(L) -->
+    lowercase(L).
+%first_letter("_") -->
+%    [_]. 
+    
+uppercase(L) -->
+    [L],                   % uppercase letters
+    {char_type(L,upper)}.  
+     
+lowercase(L) -->
+    [L],                   % lowercase letters
+    {char_type(L,lower)}.  
+    
+number([D|Ds]) -->        % numbers are
+    digit(D),              % a digit followed
+    digits(Ds).            % by other digits
+    
+digits([D|Ds]) -->
+    digit(D),
+    digits(Ds).
+digits([]) -->
+    [].
+    
+digit(D) -->              % a single digit
+    [D],
+    {char_type(D,digit)}.
+    
 % entry point!!!!!!!!!!!!!
 lexer(Input) -->             
     whitespace,           % whitespace is ignored

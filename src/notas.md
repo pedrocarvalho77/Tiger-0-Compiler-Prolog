@@ -9,6 +9,10 @@
 2. in
 
 # Inputs
+
+## Lexer
+1. tokenize([[let,function,x,(,y,:,string,),=,10,in,10]).
+## Parser
 1. parse(["let","function","x","(","y",":","string",")","=","10","in","10"],Ast).
 2. parse(["let","var","x",":=","5","var","y",":=","7","in","10"],Ast).
 3. parse(["let","var","x",":=","5","var","y",":=","7","in","10"],Ast).
