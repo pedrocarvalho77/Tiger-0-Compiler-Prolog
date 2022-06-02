@@ -67,13 +67,12 @@ whitespace -->
     {char_type(W,space)}. % space is whitespace
 
 % entry point!!!!!!!!!!!!!
-lexer(Ts) -->             
+lexer(Input) -->             
     whitespace,           % whitespace is ignored
-    lexer(Ts).
-
-lexer([Token | Tail]) -->
+    lexer(Input).
+lexer([Token | Tokens]) -->
     lexem(Token),   
-    lexer(Tail).
+    lexer(Tokens).
 lexer([]) -->
     [].
 
