@@ -11,10 +11,10 @@ decl_list([D|Ds])   --> decl(D), decl_list(Ds).
 decl(D) --> var_decl(D).
 decl(D) --> fun_decl(D).
 
-var_decl(Var:=E) --> ["var"], var(Var), [":="], expr(E). %problem here evaluating the expr(E). infite search i think
+var_decl(var(Var:=E)) --> ["var"], var(Var), [":="], expr(E). %problem here evaluating the expr(E). infite search i think
 
-fun_decl(function(id(T,E)))     --> ["function"], id(Id), ["("], type_fields(T), [")"], ["="], expr(E).
-fun_decl(function(id(T,Tid,E))) --> ["function"], id(Id), ["("], type_fields(T), [")"], [":"], type_id(Tid), ["="], expr(E).
+fun_decl(function(Id,Ts,E))     --> ["function"], id(Id), ["("], type_fields(Ts), [")"], ["="], expr(E).
+fun_decl(function(Id,Ts,T,E))   --> ["function"], id(Id), ["("], type_fields(Ts), [")"], [":"], type_id(T), ["="], expr(E).
 
 type_fields([T])    --> type_field(T).
 type_fields([T|Ts]) --> type_field(T), [","], type_fields(Ts). 
@@ -22,23 +22,19 @@ type_fields([T|Ts]) --> type_field(T), [","], type_fields(Ts).
 type_field(Id:Type) --> id(Id), [":"], type_id(Type).
 
 expr(neg(E)) --> ["-"], expr(E).
-/*
-expr(plus(E,T)) --> expr(E), ["+"], term(T).
-expr(minus(E,T)) --> expr(E), ["-"], term(T).
-expr(T) --> term(T).
-*/
-expr(eq(F1,F2)) --> factor(F1), ["="], factor(F2).
-expr(diff(F1,F2)) --> factor(F1), ["<>"], factor(F2).
-expr(lt(F1,F2)) --> factor(F1), ["<"], factor(F2).
-expr(lteq(F1,F2)) --> factor(F1), ["<="], factor(F2).
-expr(gt(F1,F2)) --> factor(F1), [">"], factor(F2).
-expr(gteq(F1,F2)) --> factor(F1), [">="], factor(F2).
 
-%expr(T) --> term(T). % here for testing 
+expr(plus(T,E)) --> term(T), ["+"], expr(E).
+expr(minus(T,E)) --> term(T), ["-"], expr(E).
+
+expr(eq(F,E)) --> factor(F), ["="], expr(E).
+expr(diff(F,E)) --> factor(F), ["<>"], expr(E).
+expr(lt(F,E)) --> factor(F), ["<"], expr(E).
+expr(lteq(F,E)) --> factor(F), ["<="], expr(E).
+expr(gt(F,E)) --> factor(F), [">"], expr(E).
+expr(gteq(F,E)) --> factor(F), [">="], expr(E).
 
 %expr(and(E1,E2)) --> ["&"], expr(E1), expr(E2).
 %expr(or(E1,E2)) --> ["|"], expr(E1), expr(E2).
-
 
 expr(assign(X,E)) --> id(X), [":="], expr(E).
 expr(func_call(X,E)) --> id(X), ["("], expr_list(E), [")"].
@@ -51,37 +47,34 @@ expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
 expr(print_int(E)) --> ["printi"], ["("], expr(E), [")"].
 expr(scan_int) --> ["scani"], ["("], [")"].
+expr(T) --> term(T). % here for testing 
 
-%expr(F) --> factor(F).
-
-expr(Num) --> integer(Num).
+/*expr(Num) --> integer(Num).
 expr(Var) --> identifier(Var).
-/*
-term(mult(T,F)) --> term(T), ["*"], factor(F).
-term(div(T,F)) --> term(T), ["/"], factor(F).
-term(mod(T,F)) --> term(T), ["%"], factor(F).
-term(T) --> factor(F).
 */
+term(mult(F,T)) --> factor(F), ["*"], term(T).
+term(div(F,T)) --> factor(F), ["/"], term(T).
+term(mod(F,T)) --> factor(F), ["%"], term(T).
+term(F) --> factor(F).
+
 factor(F) --> integer(F).
 factor(F) --> identifier(F).
-
 
 var(Var) --> identifier(Var).
 id(Id) --> identifier(Id). 
 
 expr_seq([E])       --> expr(E).
-expr_seq([E|Es])    --> expr(E), [","], expr_seq(Es). 
+expr_seq([E|Es])    --> expr(E), [";"], expr_seq(Es). 
 
 expr_list([E])       --> expr(E).                                    
 expr_list([E|Es])    --> expr(E), [","], expr_list(Es).                     
 
 var_dec_list([D])       --> var_decl(D).                                    
-var_decl_list([D|Ds])   --> var_decl(D), [","], var_decl_list(Ds). 
+var_decl_list([D|Ds])   --> var_decl(D), var_decl_list(Ds). 
 
-type_id(int) --> ["int"].              
-type_id(string) --> ["string"].
+type_id(type_int) --> ["int"].              
+type_id(type_string) --> ["string"].
 
-integer(X)      --> [Y], { number_string(X, Y) }.
-identifier(X)   --> [Y], { atom_string(X, Y) }.
-
+integer(num(X))     --> [Y], { number_string(X, Y) }.
+identifier(id(X))   --> [Y], { atom_string(X, Y) }.
 
