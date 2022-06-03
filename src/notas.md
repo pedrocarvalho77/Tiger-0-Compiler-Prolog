@@ -23,3 +23,5 @@
 1.
 2.
 3. Removing left recursion
+4. id(X) not working correctly on for_to_do
+4. printi not working right, calling as a function not as the printi funcition
