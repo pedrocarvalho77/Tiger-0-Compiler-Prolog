@@ -11,7 +11,7 @@ decl_list([D|Ds])   --> decl(D), decl_list(Ds).
 decl(D) --> var_decl(D).
 decl(D) --> fun_decl(D).
 
-var_decl(var(Var:=E)) --> ["var"], var(Var), [":="], expr(E). %problem here evaluating the expr(E). infite search i think
+var_decl(var(Var:=E)) --> ["var"], var(Var), [":="], expr(E).
 
 fun_decl(function(Id,Ts,E))     --> ["function"], id(Id), ["("], type_fields(Ts), [")"], ["="], expr(E).
 fun_decl(function(Id,Ts,T,E))   --> ["function"], id(Id), ["("], type_fields(Ts), [")"], [":"], type_id(T), ["="], expr(E).
