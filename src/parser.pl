@@ -13,8 +13,8 @@ decl(D) --> fun_decl(D).
 
 var_decl(var(Var:=E)) --> ["var"], var(Var), [":="], expr(E).
 
-fun_decl(function(Id,Ts,E))     --> ["function"], id(Id), ["("], type_fields(Ts), [")"], ["="], expr(E).
-fun_decl(function(Id,Ts,T,E))   --> ["function"], id(Id), ["("], type_fields(Ts), [")"], [":"], type_id(T), ["="], expr(E).
+fun_decl(func(Id,Ts,E))     --> ["function"], id(Id), ["("], type_fields(Ts), [")"], ["="], expr(E).
+fun_decl(func(Id,Ts,T,E))   --> ["function"], id(Id), ["("], type_fields(Ts), [")"], [":"], type_id(T), ["="], expr(E).
 
 type_fields([T])    --> type_field(T).
 type_fields([T|Ts]) --> type_field(T), [","], type_fields(Ts). 
