@@ -1,7 +1,7 @@
-:- set_prolog_flag(double_quotes, chars).
+%:- set_prolog_flag(double_quotes, chars).
 
 lexem(int) --> [int].
-lexem(string) --> [string].
+lexem(string) --> [string]. 
 lexem(+) --> [+].
 lexem(-) --> [-].
 lexem(*) --> [*].
@@ -18,20 +18,20 @@ lexem(>=) --> [>=].
 lexem(if) --> [if].
 lexem(then) --> [then].
 lexem(else) --> [else].
-%lexem(() --> [(].
-%lexem()) --> [)].
+%lexem(tok_left) --> [(].
+lexem(")") --> ")".
 lexem(;) --> [;].
 lexem(while) --> [while].
 lexem(do) --> [do].
 lexem(function) --> [function].
 lexem(:) --> [:].
-lexem(let) --> [let].
+lexem("let") --> ["let"].
 lexem(in) --> [in].
 lexem(end) --> [end].
 lexem(scani) --> [scani].
 lexem(printi) --> [printi].
 lexem(&) --> [&].
-lexem(|) --> [|].
+%lexem(|) --> [|].
 lexem(for) --> [for].
 lexem(to) --> [to].
 lexem(break) --> [break].
@@ -39,8 +39,7 @@ lexem(print) --> [print].
 %lexem([) --> [[].
 %lexem(]) --> []].
 lexem(of) --> [of].
-lexem(,) --> [,].
-
+lexem(tok_comma) --> [,].
 
 lexem(int(NA)) -->  
     number(A),

@@ -14,28 +14,35 @@ expr_seq([E|Es])    --> expr(E), [","], expr_seq(Es).
 decl(D) --> var_decl(D).
 decl(D) --> fun_decl(D).
 
-var_decl(Var:=Num) --> ["var"], var(Var), [":="], expr(Num).
+var_decl(Var:=E) --> ["var"], var(Var), [":="], expr(E). %problem here evaluating the expr(E). infite search i think
 
 var(Var) --> identifier(Var).
 id(Id) --> identifier(Id). 
 
+expr(neg(E)) --> ["-"], expr(E).
 expr(Num) --> integer(Num).
 expr(Var) --> identifier(Var).
+
+/*
 expr(plus(E,T)) --> expr(E), ["+"], term(T).
 expr(minus(E,T)) --> expr(E), ["-"], term(T).
 expr(T) --> term(T).
-%expr(mult(E1,E2)) --> ["*"], expr(E1), expr(E2).
-%expr(div(E1,E2)) --> ["/"], expr(E1), expr(E2).
-%expr(mod(E1,E2)) --> ["%"], expr(E1), expr(E2).
-%expr(eq(E1,E2)) --> ["="], expr(E1), expr(E2).
-%expr(diff(E1,E2)) --> ["<>"], expr(E1), expr(E2).
-%expr(lt(E1,E2)) --> ["<"], expr(E1), expr(E2).
-%expr(lteq(E1,E2)) --> ["<="], expr(E1), expr(E2).
-%expr(gt(E1,E2)) --> [">"], expr(E1), expr(E2).
-%expr(gteq(E1,E2)) --> [">="], expr(E1), expr(E2).
+*/
+expr(eq(F1,F2)) --> factor(F1), ["="], factor(F2).
+expr(diff(F1,F2)) --> factor(F1), ["<>"], factor(F2).
+expr(lt(F1,F2)) --> factor(F1), ["<"], factor(F2).
+expr(lteq(F1,F2)) --> factor(F1), ["<="], factor(F2).
+expr(gt(F1,F2)) --> factor(F1), [">"], factor(F2).
+expr(gteq(F1,F2)) --> factor(F1), [">="], factor(F2).
+
+%expr(T) --> term(T). % here for testing 
+
 %expr(and(E1,E2)) --> ["&"], expr(E1), expr(E2).
 %expr(or(E1,E2)) --> ["|"], expr(E1), expr(E2).
+
+
 expr(assign(X,E)) --> id(X), [":="], expr(E).
+/*
 expr(func_call(X,E)) --> id(X), ["("], expr_list(E), [")"].
 expr(expr_seq(E)) --> ["("], expr_seq(E), [")"].
 expr(if_then_else(E1,E2,E3)) --> ["if"], expr(E1), ["then"], expr(E2), ["else"], expr(E3).
@@ -46,12 +53,18 @@ expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
 expr(print_int(E)) --> ["printi"], ["("], expr(E), [")"].
 expr(scan_int(E)) --> ["scani"], ["("], expr(E), [")"].
+%expr(F) --> factor(F).
+*/
 
+/*
 term(mult(T,F)) --> term(T), ["*"], factor(F).
 term(div(T,F)) --> term(T), ["/"], factor(F).
+term(mod(T,F)) --> term(T), ["%"], factor(F).
 term(T) --> factor(F).
-
+*/
 factor(F) --> integer(F).
+factor(F) --> identifier(F).
+
 
 fun_decl(function(id(T,E)))     --> ["function"], id(Id), ["("], type_fields(T), [")"], ["="], expr(E).
 fun_decl(function(id(T,Tid,E))) --> ["function"], id(Id), ["("], type_fields(T), [")"], [":"], type_id(Tid), ["="], expr(E).
