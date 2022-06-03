@@ -47,11 +47,8 @@ expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
 expr(print_int(E)) --> ["printi"], ["("], expr(E), [")"].
 expr(scan_int) --> ["scani"], ["("], [")"].
-expr(T) --> term(T). % here for testing 
+expr(T) --> term(T).
 
-/*expr(Num) --> integer(Num).
-expr(Var) --> identifier(Var).
-*/
 term(mult(F,T)) --> factor(F), ["*"], term(T).
 term(div(F,T)) --> factor(F), ["/"], term(T).
 term(mod(F,T)) --> factor(F), ["%"], term(T).
