@@ -41,7 +41,7 @@ expr(func_call(X,E)) --> id(X), ["("], expr_list(E), [")"].
 expr(expr_seq(E)) --> ["("], expr_seq(E), [")"].
 expr(if_then_else(E1,E2,E3)) --> ["if"], expr(E1), ["then"], expr(E2), ["else"], expr(E3).
 expr(if_then(E1,E2)) --> ["if"], expr(E1), ["then"], expr(E2).
-expr(while_do(E1,E2)) --> ["while"], expr(E1), ["do"], expr(E2). %not working
+expr(while_do(E1,E2)) --> ["while"], expr(E1), ["do"], expr(E2).
 expr(for_to_do(X,E1,E2,E3)) --> ["for"], id(X), [":="], expr(E1), ["to"], expr(E2), ["do"], expr(E3).
 expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
