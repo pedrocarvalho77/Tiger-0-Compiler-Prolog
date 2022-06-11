@@ -1,12 +1,8 @@
 # Questions
 
-1. how to use the undersocre for ID
-2. how change this operator(+) to only display + on the tokenizer
 
 # Things to add to the tokenizer
 
-1. Let
-2. in
 
 # Inputs
 
@@ -32,10 +28,7 @@
 5.
 ## Problems
 
-1. logical expressions still missing (& | operators)
-2. fix lexer
-3. combine all the calls into the compiler.pl file
-4. fix backtraing (add cut or look for the integer and identifier definitions)
-5. printi not working right, calling as a function not as the printi funcition
-6. define what should be on the nodes or not in the ABS
-7. Learning prolog, especially CDG
+1. logical expressions still missing (& | operators) 
+2. printi not working right, calling as a function not as the printi funcition
+3. define what should be on the nodes or not in the ABS
+4. Learning prolog, especially CDG
