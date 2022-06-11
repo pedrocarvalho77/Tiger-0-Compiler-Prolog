@@ -3,8 +3,8 @@
 convert([],[]).
 convert([X|Xs],[Y|Ys]) :- trans(X,Y), convert(Xs,Ys).
 
-trans(tok_num(N),Result) :- concate1(N,Result).
-trans(tok_id(Id),Result) :- concate2(Id,Result).
+trans(tok_num(N), N).
+trans(tok_id(Id), Id).
 
 trans(tok_type_int, "int"). 
 trans(tok_type_string, "string"). 
@@ -46,14 +46,3 @@ trans(tok_l_square_bracket, "[").
 trans(tok_r_square_bracket, "]").
 trans(tok_of, "of").
 trans(tok_comma, ",").
-
-
-concate1(N,Result) :-
-    number_string(N,String),
-    string_concat("num(", String, Aux),
-    string_concat(Aux, ")", Result).
-
-concate2(Id,Result) :-
-    atom_string(Id,String),
-    string_concat("id(", String, Aux),
-    string_concat(Aux, ")", Result).
