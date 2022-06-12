@@ -1,0 +1,6 @@
+let
+    var n := 1
+in
+    while 10 do
+        (s := s + n*n;
+    printi(n))
