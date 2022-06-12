@@ -1,9 +1,12 @@
-:- set_prolog_flag(double_quotes, chars).
+:- module(parser, [parse/2]).
+:- use_module(utils).
 
-parse(Tokens, Ast):-
-    phrase(program(Ast), Tokens).
 
-program([let_in, D, E]) --> ["let"], decl_list(D), ["in"], expr_seq(E).
+parse(AtomTokens, Ast):-
+    convert(AtomTokens, StringTokens),
+    phrase(program(Ast), StringTokens).
+
+program([let_in, D, E]) --> ["let"], decl_list(D), ["in"], expr_seq(E), !.
 
 decl_list([D])      --> decl(D).
 decl_list([D|Ds])   --> decl(D), decl_list(Ds).
@@ -55,7 +58,6 @@ term(mod(F,T)) --> factor(F), ["%"], term(T).
 term(F) --> factor(F).
 
 factor(F) --> integer(F).
-factor(F) --> identifier(F).
 
 var(Var) --> identifier(Var).
 id(Id) --> identifier(Id). 
@@ -72,6 +74,5 @@ var_decl_list([D|Ds])   --> var_decl(D), var_decl_list(Ds).
 type_id(type_int) --> ["int"].              
 type_id(type_string) --> ["string"].
 
-integer(num(X))     --> [Y], { number_string(X, Y) }.
+integer(num(X))     --> [Y], { atom_string(X, Y) }.
 identifier(id(X))   --> [Y], { atom_string(X, Y) }.
-
