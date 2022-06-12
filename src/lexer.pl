@@ -2,9 +2,7 @@
 
 % entry point!!!!!!!!!!!!!
 tokenize(Input, Result) :-
-    %phrase(lexer(Result), Input),
     phrase_from_file(lexer(Result), Input),
-    %write(Result),
     !.
 
 lexer(Input) -->             
