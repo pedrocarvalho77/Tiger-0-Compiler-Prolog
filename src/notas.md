@@ -31,4 +31,3 @@
 1. logical expressions still missing (& | operators) 
 2. printi not working right, calling as a function not as the printi funcition
 3. define what should be on the nodes or not in the ABS
-4. Learning prolog, especially CDG
