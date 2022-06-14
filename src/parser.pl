@@ -36,9 +36,10 @@ expr(lteq(F,E)) --> factor(F), ["<="], expr(E).
 expr(gt(F,E)) --> factor(F), [">"], expr(E).
 expr(gteq(F,E)) --> factor(F), [">="], expr(E).
 
-%expr(and(E1,E2)) --> ["&"], expr(E1), expr(E2).
-%expr(or(E1,E2)) --> ["|"], expr(E1), expr(E2).
+expr(and(T,E)) --> term(T), ["&"], expr(E).
+expr(or(T,E)) --> term(T), ["|"], expr(E).
 
+expr(print_int(E)) --> ["printi"], ["("], expr(E), [")"].
 expr(assign(X,E)) --> id(X), [":="], expr(E).
 expr(func_call(X,E)) --> id(X), ["("], expr_list(E), [")"].
 expr(expr_seq(E)) --> ["("], expr_seq(E), [")"].
@@ -48,13 +49,12 @@ expr(while_do(E1,E2)) --> ["while"], expr(E1), ["do"], expr(E2).
 expr(for_to_do(X,E1,E2,E3)) --> ["for"], id(X), [":="], expr(E1), ["to"], expr(E2), ["do"], expr(E3).
 expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
-expr(print_int(E)) --> ["printi"], ["("], expr(E), [")"].
 expr(scan_int) --> ["scani"], ["("], [")"].
 expr(T) --> term(T).
 
-term(mult(F,T)) --> factor(F), ["*"], term(T).
-term(div(F,T)) --> factor(F), ["/"], term(T).
-term(mod(F,T)) --> factor(F), ["%"], term(T).
+term(mult(F,E)) --> factor(F), ["*"], expr(E).
+term(div(F,E)) --> factor(F), ["/"], expr(E).
+term(mod(F,E)) --> factor(F), ["%"], expr(E).
 term(F) --> factor(F).
 
 factor(F) --> integer(F).
