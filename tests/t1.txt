@@ -1,6 +1,9 @@
+/* sss  */
 let
+    var s := 0
     var n := 1
 in
-    while 10 do
+    while n < 10 do
         (s := s + n*n;
-    printi(n))
+        n := n + 1;
+        printi(n))
