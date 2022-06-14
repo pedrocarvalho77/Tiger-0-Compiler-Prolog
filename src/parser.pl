@@ -50,6 +50,8 @@ expr(for_to_do(X,E1,E2,E3)) --> ["for"], id(X), [":="], expr(E1), ["to"], expr(E
 expr(break) --> ["break"].
 expr(let_in_end(D,E)) --> ["let"], var_dec_list(D), ["in"], expr_seq(E), ["end"].
 expr(scan_int) --> ["scani"], ["("], [")"].
+expr(int_array(E1,E2)) --> ["intArray"], ["["], expr(E1), ["]"], ["of"], expr(E2).
+
 expr(T) --> term(T).
 
 term(mult(F,E)) --> factor(F), ["*"], expr(E).
