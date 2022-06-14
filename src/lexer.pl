@@ -6,9 +6,11 @@ tokenize(Input, Result) :-
     !.
 
 lexer(Input) -->             
+    mtlexem,
     whitespace,           % whitespace is ignored
     lexer(Input).
 lexer([Token | Tokens]) -->
+    mtlexem,
     lexem(Token),   
     lexer(Tokens).
 lexer([]) -->
@@ -21,7 +23,8 @@ whitespace -->
 anything([]) --> [].
 anything([A|T]) --> [A], anything(T).
 
-lexem([]) --> "/*", anything(A), "*/".
+mtlexem --> "/*", anything(A), "*/", !.
+mtlexem --> [].
 
 lexem(tok_type_int) --> "int".
 lexem(tok_type_string) --> "string".
