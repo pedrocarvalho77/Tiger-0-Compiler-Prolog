@@ -73,6 +73,7 @@ var_decl_list([D|Ds])   --> var_decl(D), var_decl_list(Ds).
 
 type_id(type_int) --> ["int"].              
 type_id(type_string) --> ["string"].
+type_id(tok_type_intArray) --> ["intArray"].
 
 integer(num(X))     --> [Y], { atom_string(X, Y) }.
 identifier(id(X))   --> [Y], { atom_string(X, Y) }.

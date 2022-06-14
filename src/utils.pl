@@ -7,7 +7,8 @@ trans(tok_num(N), N).
 trans(tok_id(Id), Id).
 
 trans(tok_type_int, "int"). 
-trans(tok_type_string, "string"). 
+trans(tok_type_string, "string").
+trans(tok_type_intArray, "intArray"). 
 trans(tok_plus, "+").
 trans(tok_minus, "-").
 trans(tok_mult, "*").

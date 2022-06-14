@@ -24,7 +24,8 @@ anything([A|T]) --> [A], anything(T).
 lexem([]) --> "/*", anything(A), "*/".
 
 lexem(tok_type_int) --> "int".
-lexem(tok_type_string) --> "string". 
+lexem(tok_type_string) --> "string".
+lexem(tok_type_intArray) --> "intArray".
 lexem(tok_plus) --> "+".
 lexem(tok_minus) --> "-".
 lexem(tok_mult) --> "*".
