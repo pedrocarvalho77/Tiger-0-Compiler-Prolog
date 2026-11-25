@@ -1,6 +1,6 @@
 SWIPL ?= swipl
-PASS  = tests/t1.txt tests/t2.txt
-XFAIL = tests/t3.txt tests/t4.txt tests/test5.txt
+PASS  = tests/t1.txt tests/t2.txt tests/t3.txt tests/t4.txt tests/test5.txt
+XFAIL =
 
 .PHONY: run test
 # make run FILE=tests/t1.txt

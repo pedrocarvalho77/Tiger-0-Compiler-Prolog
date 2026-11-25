@@ -48,6 +48,8 @@ lexem(tok_l_square_bracket) --> "[".
 lexem(tok_r_square_bracket) --> "]".
 lexem(tok_comma) --> ",".
 
+lexem(tok_str(S)) --> "\"", str_chars(Cs), "\"", !, {atom_chars(S,Cs)}.
+
 lexem(tok_num(NA)) --> number(A), !, {number_chars(NA,A)}.
 
 % an identifier is a keyword only if it matches a whole word ("index" is not "in" + "dex")
@@ -74,6 +76,11 @@ keyword(break, tok_break).
 keyword(print, tok_print).
 keyword(of, tok_of).
     
+% string body: any characters except an unescaped quote
+str_chars([0'\\, C|Cs]) --> [0'\\, C], !, str_chars(Cs).
+str_chars([C|Cs]) --> [C], {C \== 0'"}, !, str_chars(Cs).
+str_chars([]) --> [].
+
 identifier([L|Ls]) --> first_symbol(L), ident(Ls).
     
 ident([L|Ls]) --> symbol(L), ident(Ls).

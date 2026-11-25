@@ -6,7 +6,7 @@ There is also a Haskell version: [Tiger-0-Compiler](https://github.com/pedrocarv
 
 ## Status
 
-Work in progress. Done: lexer and parser (source to tokens to AST). Not done: type checking, intermediate code and code generation (`src/int_code.pl` and `src/teste1.pl` are unfinished drafts, not loaded by the compiler).
+Work in progress. Done: lexer and parser (source to tokens to AST), covering all the examples in `tests/` (strings, arrays, `&`/`|`, comparisons, function calls). Not done: type checking, intermediate code and code generation.
 
 ## Requirements
 
@@ -43,11 +43,9 @@ Output (AST):
 make test
 ```
 
-Checks that `t1` and `t2` compile, and that the other examples still fail (they are known limitations, see below).
+Checks that every file in `tests/` lexes and parses.
 
 ## Limitations
 
-- String literals are not lexed (`tests/t3.txt`, `tests/test5.txt`).
-- Array indexing (`a[i]`, `a[i] := x`) is not parsed (`tests/t4.txt`).
-- Unary minus, `printi`, and operator precedence/associativity are only partly handled; see `src/notas.md`.
-- The parser may return several ASTs on backtracking; only the first is printed.
+- No type checking or code generation yet (`src/int_code.pl` and `src/teste1.pl` are unfinished drafts, not loaded by the compiler).
+- Only the first AST is returned when the grammar is ambiguous.
