@@ -54,20 +54,22 @@ L2:
     ...
 ```
 
+Intermediate code: `call(Dest,Function,Hops,Args)` carries the number of static links to follow; a variable `v(Up,X)` lives `Up` frames above the current one.
+
 Errors are reported on stderr with exit status 1, for example `error: expected int but found string in string(hello)`.
 
 ## Language
 
-Supported: `int`, `string` and `intArray` types; `let ... in ... end`; `var` and top-level `function` declarations (recursion allowed); `if`, `while`, `for`, `break`; `+ - * / %`, comparisons, `&`, `|`; array indexing; `printi`, `print`, `scani`; `/* ... */` comments; string escapes `\n`, `\t`.
+Supported: `int`, `string` and `intArray` types; `let ... in ... end`; `var` and `function` declarations (recursion and nested functions allowed); `if`, `while`, `for`, `break` (the variable of a `for` is read-only); `+ - * / %`, comparisons, `&`, `|`; array indexing; `printi`, `print`, `scani`; `/* ... */` comments; string escapes `\n`, `\t`.
 
 ## Tests
 
-`make test` compiles and runs every program in `tests/` and compares the output with `tests/*.out` (`t3` reads its input from `t3.in`). The expected outputs of the 8 queens (`test5`) and Fibonacci (`t4`) programs were generated with an independent Python implementation. `tests/bad_type.txt` must be rejected by the type checker.
+`make test` compiles and runs every program in `tests/` and compares the output with `tests/*.out` (`t3` reads its input from `t3.in`). The expected outputs of the 8 queens (`test5`) and Fibonacci (`t4`) programs were generated with an independent Python implementation. `nested.txt` covers nested functions. `bad_type.txt` and `bad_for.txt` must be rejected by the type checker.
 
 ## Limitations
 
-- Functions can only be declared at the top level and cannot see the variables of other functions (no nested functions or static links).
 - Function bodies without a declared return type must be `void` (as in Appel's Tiger).
-- Types: no records, no user-defined types.
-- The loop variable of a `for` is not protected against assignment.
+- Nested functions are supported (they can read and assign the variables and parameters of the enclosing functions), but functions are not values: no function parameters or closures.
+- Types: no records, no user-defined types (not part of Tiger-0).
+- The interpreter does not free the variables of finished calls, so very long runs use more memory.
 - Only the first AST is used when the grammar is ambiguous.
