@@ -1,12 +1,12 @@
 SWIPL ?= swipl
-PASS  = tests/t1.txt tests/t2.txt tests/t3.txt tests/t4.txt tests/test5.txt tests/nested.txt
-BAD   = tests/bad_type.txt tests/bad_for.txt
+PASS  = $(wildcard tests/ok/*.txt)
+BAD   = $(wildcard tests/err/*.txt)
 
 MARS  ?=
 
 .PHONY: run exec mips test test-mips
 
-# make mips FILE=tests/t2.txt > t2.s   (print MIPS assembly)
+# make mips FILE=tests/ok/factorial.txt > t2.s   (print MIPS assembly)
 mips:
 	@cd src && $(SWIPL) -q -g "main_mips('../$(FILE)')" -t halt compiler.pl
 
@@ -24,16 +24,16 @@ test-mips:
 	done; \
 	exit $$fail
 
-# make run FILE=tests/t1.txt   (print tokens, AST and intermediate code)
+# make run FILE=tests/ok/while_sum.txt   (print tokens, AST and intermediate code)
 run:
 	@cd src && $(SWIPL) -q -g "main_compile('../$(FILE)')" -t halt compiler.pl
 
-# make exec FILE=tests/t2.txt  (compile and execute; reads stdin for scani)
+# make exec FILE=tests/ok/factorial.txt  (compile and execute; reads stdin for scani)
 exec:
 	@cd src && $(SWIPL) -q -g "main_run('../$(FILE)')" -t halt compiler.pl
 
-# Each file in PASS must compile and print exactly tests/X.out (stdin from
-# tests/X.in if it exists). the files in BAD must be rejected.
+# Each file in PASS must compile and print exactly the .out next to it (stdin from the
+# .in next to it if it exists). The files in tests/err must be rejected.
 test:
 	@fail=0; \
 	for f in $(PASS); do \

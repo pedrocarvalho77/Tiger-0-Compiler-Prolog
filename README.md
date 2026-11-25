@@ -15,7 +15,7 @@ There is also a Haskell version: [Tiger-0-Compiler](https://github.com/pedrocarv
 | MIPS back end | `src/mips.pl` | MIPS32 assembly (MARS/SPIM, syscall I/O) |
 | Interpreter | `src/interp.pl` | runs the intermediate code directly (faster check of the front end) |
 
-`src/compiler.pl` ties them together. `src/int_code.pl` and `src/teste1.pl` are older drafts, not loaded.
+`src/compiler.pl` ties them together. `old/` keeps two older drafts (`int_code.pl`, `teste1.pl`) that are not loaded; `docs/notas.md` has working notes.
 
 ## Requirements
 
@@ -24,14 +24,14 @@ There is also a Haskell version: [Tiger-0-Compiler](https://github.com/pedrocarv
 ## Usage
 
 ```sh
-make run  FILE=tests/t2.txt   # print tokens, AST and intermediate code
-make exec FILE=tests/t2.txt   # compile and execute
-make mips FILE=tests/t2.txt   # print MIPS assembly
+make run  FILE=tests/ok/factorial.txt   # print tokens, AST and intermediate code
+make exec FILE=tests/ok/factorial.txt   # compile and execute
+make mips FILE=tests/ok/factorial.txt   # print MIPS assembly
 make test
 make test-mips MARS=/path/to/Mars.jar   # run the assembly in MARS
 ```
 
-Input (`tests/t2.txt`):
+Input (`tests/ok/factorial.txt`):
 
 ```
 let
@@ -71,7 +71,7 @@ Supported: `int`, `string` and `intArray` types; `let ... in ... end`; `var` and
 
 ## Tests
 
-`make test` compiles and runs (in the interpreter) every program in `tests/` and compares the output with `tests/*.out` (`t3` reads its input from `t3.in`). The expected outputs of the 8 queens (`test5`) and Fibonacci (`t4`) programs were generated with an independent Python implementation. `make test-mips` does the same on the generated MIPS code with MARS. `nested.txt` covers nested functions. `bad_type.txt` and `bad_for.txt` must be rejected by the type checker.
+`make test` compiles and runs (in the interpreter) every program in `tests/ok/` and compares the output with the `.out` next to it (`primes` reads its input from `primes.in`). The expected outputs of the 8 queens (`eight_queens`) and Fibonacci (`fibonacci`) programs were generated with an independent Python implementation. `make test-mips` does the same on the generated MIPS code with MARS. `nested_functions.txt` covers nested functions. The programs in `tests/err/` must be rejected by the type checker.
 
 ## Limitations
 
