@@ -71,5 +71,4 @@ Supported: `int`, `string` and `intArray` types; `let ... in ... end`; `var` and
 - Function bodies without a declared return type must be `void` (as in Appel's Tiger).
 - Nested functions are supported (they can read and assign the variables and parameters of the enclosing functions), but functions are not values: no function parameters or closures.
 - Types: no records, no user-defined types (not part of Tiger-0).
-- The interpreter does not free the variables of finished calls, so very long runs use more memory.
 - Only the first AST is used when the grammar is ambiguous.

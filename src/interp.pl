@@ -2,23 +2,23 @@
 
 % run_ir(+IR): executes the intermediate code produced by codegen/2.
 % Used to check the compiler end to end (there is no native back end yet).
-% Each call gets a frame (a global hashtable holds its variables, flink/2 its
-% static link, the frame of the enclosing function); arrays live on a heap (arr(Id)).
+% Each call gets a frame (a hashtable with its variables and its static link,
+% the frame of the enclosing function); arrays live on a heap (arr(Id)).
 
 :- use_module(library(hashtable)).
 
-:- dynamic fun_def/4, flink/2, cell/3, arrsize/2.
+:- dynamic fun_def/4, cell/3, arrsize/2.
 
 run_ir(ir(Main, Funs)) :-
-    retractall(fun_def(_,_,_,_)), retractall(flink(_,_)),
+    retractall(fun_def(_,_,_,_)),
     retractall(cell(_,_,_)), retractall(arrsize(_,_)),
     forall(member(fun(F,Ps,C), Funs),
            ( labels(C, t, Ls), assertz(fun_def(F,Ps,C,Ls)) )),
-    ht_new(HT), nb_setval(tiger_vars, HT),
     new_frame(none, Fid),
     labels(Main, t, MainLs), exec(Main, MainLs, Fid, _).
 
-new_frame(Link, Fid) :- flag(tiger_frame, Fid, Fid+1), assertz(flink(Fid, Link)).
+% a frame is a mutable hashtable (garbage collected after the call returns)
+new_frame(Link, F) :- ht_new(F), ht_put(F, '$link', Link).
 
 labels([], L, L).
 labels([label(N)|Rest], L0, L) :- !,
@@ -57,13 +57,12 @@ step(newarray(D,N,I), _, F, fall, _) :-
     Max is Size-1, forall(between(0, Max, K), assertz(cell(Id, K, Init))),
     set(D, arr(Id), F).
 step(call(D,Fn,Hops,Args), _, F, fall, _) :-
-    maplist([A,V]>>val(A, F, V), Args, Vs),
+    vals(Args, F, Vs),
     fun_def(Fn, Ps, Code, Labels),
     hop(Hops, F, Link),
     new_frame(Link, Nf),
-    maplist([P,V]>>store_var(Nf, P, V), Ps, Vs),
+    store_all(Ps, Vs, Nf),
     exec(Code, Labels, Nf, R),
-    retractall(flink(Nf,_)),
     set(D, R, F).
 step(ret(A), _, F, return, R) :- val(A, F, R).
 step(printi(A), _, F, fall, _) :- val(A, F, X), write(X).
@@ -91,7 +90,7 @@ check_index(Id, K) :-
 
 % hop(+N, +Frame, -Frame2): follow N static links
 hop(0, F, F) :- !.
-hop(N, F, G) :- flink(F, L), N1 is N-1, hop(N1, L, G).
+hop(N, F, G) :- ht_get(F, '$link', L), N1 is N-1, hop(N1, L, G).
 
 val(num(N), _, N).
 val(str(S), _, str(S)).
@@ -101,8 +100,8 @@ val(v(Up,X), F, V) :- hop(Up, F, G), load_var(G, X, V).
 set(t(N), V, F) :- store_var(F, t(N), V).
 set(v(Up,X), V, F) :- hop(Up, F, G), store_var(G, X, V).
 
-store_var(F, K, V) :- nb_getval(tiger_vars, HT), ht_put(HT, F-K, V).
-load_var(F, K, V) :- nb_getval(tiger_vars, HT), ht_get(HT, F-K, V).
+store_var(F, K, V) :- ht_put(F, K, V).
+load_var(F, K, V) :- ht_get(F, K, V).
 
 % string escapes: \n \t \" \\ ; anything else is printed as written
 emit([]).
@@ -111,3 +110,9 @@ emit(['\\', t|T]) :- !, put_char('\t'), emit(T).
 emit(['\\', C|T]) :- !, put_char(C), emit(T).
 emit([C|T]) :- put_char(C), emit(T).
 
+
+vals([], _, []).
+vals([A|As], F, [V|Vs]) :- val(A, F, V), vals(As, F, Vs).
+
+store_all([], [], _).
+store_all([P|Ps], [V|Vs], F) :- store_var(F, P, V), store_all(Ps, Vs, F).
