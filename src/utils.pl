@@ -5,6 +5,7 @@ convert([X|Xs],[Y|Ys]) :- trans(X,Y), convert(Xs,Ys).
 
 trans(tok_num(N), N).
 trans(tok_id(Id), Id).
+trans(tok_str(S), str(S)).
 
 trans(tok_type_int, "int"). 
 trans(tok_type_string, "string").

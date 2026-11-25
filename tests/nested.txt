@@ -1,0 +1,13 @@
+/* nested functions: add and twice use the locals and the parameter of outer */
+let
+    var total := 0
+    function outer(n: int): int =
+        let
+            var acc := 100
+            function add(k: int) = acc := acc + k + n
+            function twice(k: int) = (add(k); add(k); total := total + 1)
+        in
+            twice(1); twice(2); acc
+        end
+in
+    printi(outer(5)); print(" "); printi(total)
