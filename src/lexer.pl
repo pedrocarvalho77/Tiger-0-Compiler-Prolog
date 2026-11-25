@@ -23,54 +23,56 @@ whitespace -->
 anything([]) --> [].
 anything([A|T]) --> [A], anything(T).
 
-mtlexem --> "/*", anything(A), "*/", !.
+mtlexem --> "/*", anything(_), "*/", !.
 mtlexem --> [].
 
-lexem(tok_type_int) --> "int".
-lexem(tok_type_string) --> "string".
-lexem(tok_type_intArray) --> "intArray".
+lexem(tok_diff) --> "<>".
+lexem(tok_less_or_equal) --> "<=".
+lexem(tok_greater_or_equal) --> ">=".
 lexem(tok_plus) --> "+".
 lexem(tok_minus) --> "-".
 lexem(tok_mult) --> "*".
 lexem(tok_div) --> "/".
 lexem(tok_mod) --> "%".
-lexem(tok_var) --> "var".
 lexem(tok_assign) --> ":=".
 lexem(tok_equal) --> "=".
-lexem(tok_diff) --> "<>".
 lexem(tok_less) --> "<".
-lexem(tok_less_or_equal) --> "<=".
 lexem(tok_greater) --> ">".
-lexem(tok_greater_or_equal) --> ">=".
-lexem(tok_if) --> "if".
-lexem(tok_then) --> "then".
-lexem(tok_else) --> "else".
 lexem(tok_lparen) --> "(".
 lexem(tok_rparen) --> ")".
 lexem(tok_semicolon) --> ";".
-lexem(tok_while) --> "while".
-lexem(tok_do) --> "do".
-lexem(tok_func) --> "function".
 lexem(tok_colon) --> ":".
-lexem(tok_let) --> "let".
-lexem(tok_in) --> "in".
-lexem(tok_end) --> "end".
-lexem(tok_scani) --> "scani".
-lexem(tok_printi) --> "printi".
 lexem(tok_and) --> "&".
 lexem(tok_or) --> "|".
-lexem(tok_for) --> "for".
-lexem(tok_to) --> "to".
-lexem(tok_break) --> "break".
-lexem(tok_print) --> "print".
 lexem(tok_l_square_bracket) --> "[".
 lexem(tok_r_square_bracket) --> "]".
-lexem(tok_of) --> "of".
 lexem(tok_comma) --> ",".
 
 lexem(tok_num(NA)) --> number(A), !, {number_chars(NA,A)}.
 
-lexem(tok_id(IA)) --> identifier(I), !, {atom_chars(IA,I)}.
+% an identifier is a keyword only if it matches a whole word ("index" is not "in" + "dex")
+lexem(Tok) --> identifier(I), !, {atom_chars(A,I), ( keyword(A,K) -> Tok = K ; Tok = tok_id(A) )}.
+
+keyword(int, tok_type_int).
+keyword(string, tok_type_string).
+keyword(intArray, tok_type_intArray).
+keyword(var, tok_var).
+keyword(if, tok_if).
+keyword(then, tok_then).
+keyword(else, tok_else).
+keyword(while, tok_while).
+keyword(do, tok_do).
+keyword(function, tok_func).
+keyword(let, tok_let).
+keyword(in, tok_in).
+keyword(end, tok_end).
+keyword(scani, tok_scani).
+keyword(printi, tok_printi).
+keyword(for, tok_for).
+keyword(to, tok_to).
+keyword(break, tok_break).
+keyword(print, tok_print).
+keyword(of, tok_of).
     
 identifier([L|Ls]) --> first_symbol(L), ident(Ls).
     

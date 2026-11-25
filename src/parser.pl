@@ -60,6 +60,7 @@ term(mod(F,E)) --> factor(F), ["%"], expr(E).
 term(F) --> factor(F).
 
 factor(F) --> integer(F).
+factor(F) --> identifier(F).
 
 var(Var) --> identifier(Var).
 id(Id) --> identifier(Id). 
@@ -70,12 +71,12 @@ expr_seq([E|Es])    --> expr(E), [";"], expr_seq(Es).
 expr_list([E])       --> expr(E).                                    
 expr_list([E|Es])    --> expr(E), [","], expr_list(Es).                     
 
-var_dec_list([D])       --> var_decl(D).                                    
-var_decl_list([D|Ds])   --> var_decl(D), var_decl_list(Ds). 
+var_dec_list([D])       --> var_decl(D).
+var_dec_list([D|Ds])    --> var_decl(D), var_dec_list(Ds). 
 
 type_id(type_int) --> ["int"].              
 type_id(type_string) --> ["string"].
 type_id(tok_type_intArray) --> ["intArray"].
 
-integer(num(X))     --> [Y], { atom_string(X, Y) }.
-identifier(id(X))   --> [Y], { atom_string(X, Y) }.
+integer(num(Y))     --> [Y], { number(Y) }.
+identifier(id(Y))   --> [Y], { atom(Y) }.
