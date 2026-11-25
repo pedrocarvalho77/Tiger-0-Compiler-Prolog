@@ -97,6 +97,6 @@ expr_list([E|Es])    --> expr(E), [","], expr_list(Es).
 
 type_id(type_int) --> ["int"].
 type_id(type_string) --> ["string"].
-type_id(tok_type_intArray) --> ["intArray"].
+type_id(type_intArray) --> ["intArray"].
 
 identifier(id(Y))   --> [Y], { atom(Y) }.

@@ -1,12 +1,20 @@
 # Tiger-0-Compiler-Prolog
 
-Front end of a compiler for Tiger-0, a subset of the Tiger language from *Modern Compiler Implementation in ML* (Appel), written in Prolog (SWI-Prolog). Academic project.
+Compiler for Tiger-0, a subset of the Tiger language from *Modern Compiler Implementation in ML* (Appel), written in Prolog (SWI-Prolog). Academic project.
 
 There is also a Haskell version: [Tiger-0-Compiler](https://github.com/pedrocarvalho77/Tiger-0-Compiler).
 
-## Status
+## Pipeline
 
-Work in progress. Done: lexer and parser (source to tokens to AST), covering all the examples in `tests/` (strings, arrays, `&`/`|`, comparisons, function calls). Not done: type checking, intermediate code and code generation.
+| Step | File | Output |
+|------|------|--------|
+| Lexer | `src/lexer.pl` | token list |
+| Parser | `src/parser.pl` | AST |
+| Type checker | `src/typecheck.pl` | accepts the AST or reports an error |
+| Code generator | `src/codegen.pl` | intermediate code (flat list: labels, jumps, moves, calls...) |
+| Interpreter | `src/interp.pl` | runs the intermediate code, to check the compiler end to end |
+
+`src/compiler.pl` ties them together. There is no native back end (MIPS or similar): the intermediate code is the last stage. `src/int_code.pl` and `src/teste1.pl` are older drafts, not loaded.
 
 ## Requirements
 
@@ -15,37 +23,51 @@ Work in progress. Done: lexer and parser (source to tokens to AST), covering all
 ## Usage
 
 ```sh
-make run FILE=tests/t2.txt
+make run  FILE=tests/t2.txt   # print tokens, AST and intermediate code
+make exec FILE=tests/t2.txt   # compile and execute
+make test
 ```
-
-Prints the token list, then the AST. Equivalent to running `tiger0_compiler('file')` from `src/compiler.pl`.
 
 Input (`tests/t2.txt`):
 
 ```
 let
-    function fact(n: int) =
+    function fact(n: int): int =
         if n>0 then n*fact(n-1)
         else 1
 in
     printi(fact(10))
 ```
 
-Output (AST):
+`make exec` prints `3628800`. `make run` prints the intermediate code:
 
 ```
-[let_in,[func(id(fact),[id(n):type_int],if_then_else(gt(id(n),num(0)),mult(id(n),func_call(id(fact),[minus(id(n),num(1))])),num(1)))],[print_int(func_call(id(fact),[num(10)]))]]
+main:
+    call(t(8),fact,[num(10)])
+    printi(t(8))
+    ret(num(0))
+
+function fact([v(n_0)]):
+    cjump(v(n_0),gt,num(0),'L2','L3')
+L2:
+    binop(t(5),minus,v(n_0),num(1))
+    ...
 ```
+
+Errors are reported on stderr with exit status 1, for example `error: expected int but found string in string(hello)`.
+
+## Language
+
+Supported: `int`, `string` and `intArray` types; `let ... in ... end`; `var` and top-level `function` declarations (recursion allowed); `if`, `while`, `for`, `break`; `+ - * / %`, comparisons, `&`, `|`; array indexing; `printi`, `print`, `scani`; `/* ... */` comments; string escapes `\n`, `\t`.
 
 ## Tests
 
-```sh
-make test
-```
-
-Checks that every file in `tests/` lexes and parses.
+`make test` compiles and runs every program in `tests/` and compares the output with `tests/*.out` (`t3` reads its input from `t3.in`). The expected outputs of the 8 queens (`test5`) and Fibonacci (`t4`) programs were generated with an independent Python implementation. `tests/bad_type.txt` must be rejected by the type checker.
 
 ## Limitations
 
-- No type checking or code generation yet (`src/int_code.pl` and `src/teste1.pl` are unfinished drafts, not loaded by the compiler).
-- Only the first AST is returned when the grammar is ambiguous.
+- Functions can only be declared at the top level and cannot see the variables of other functions (no nested functions or static links).
+- Function bodies without a declared return type must be `void` (as in Appel's Tiger).
+- Types: no records, no user-defined types.
+- The loop variable of a `for` is not protected against assignment.
+- Only the first AST is used when the grammar is ambiguous.
